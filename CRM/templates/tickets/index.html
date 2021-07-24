@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load cache %}
+{% block title %} Последние обновления {% endblock %}
+
+{% block content %}
+    <div class="container">
+           <h1> Последние поступившие запросы</h1>
+                {% for ticket in page %}
+                    {% include "include/ticket_item.html" with ticket=ticket %}
+                {% endfor %}
+    </div>
+
+        {% if page.has_other_pages %}
+            {% include "paginator.html" with items=page paginator=paginator%}
+        {% endif %}
+
+{% endblock %}
