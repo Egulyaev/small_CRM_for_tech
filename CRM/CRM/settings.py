@@ -1,5 +1,6 @@
 import os
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = 'q@$u6d=)c#r-^-k!(+c681+-5_x^=pl!mxgj)v6ib4jwt=r92o'
@@ -7,6 +8,8 @@ SECRET_KEY = 'q@$u6d=)c#r-^-k!(+c681+-5_x^=pl!mxgj)v6ib4jwt=r92o'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+AUTH_USER_MODEL = 'CRM_TECH.User'
 
 INSTALLED_APPS = [
     'django_tables2',

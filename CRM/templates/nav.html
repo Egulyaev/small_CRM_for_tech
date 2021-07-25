@@ -6,7 +6,20 @@
 
             <nav class="my-2 my-md-0 mr-md-3">
                 <left><a class="navbar-brand" href="{% url 'index' %}"><span style="color:red">DOM</span>CRM</a></left>
-                 {% if user.is_authenticated %}
+                {% if user.is_authenticated and user.is_superuser %}
+                <a class="text-muted"> Пользователь: {{ user.username }}. |</a>
+                <a class="text-muted" href="{% url 'all_users' %}">Управлять пользователями | </a>
+                <a class="text-muted" href="{% url 'all_tickets' %}">Управлять запросами | </a>
+                <a class="text-muted" href="{% url 'new_ticket' %}"> Новый запрос | </a>
+                <a class="text-muted" href="{% url 'password_change' %}">Изменить пароль | </a>
+                <a class="text-muted" href="{% url 'logout' %}">Выйти | </a>
+                {% elif user.is_authenticated and user.is_moderator %}
+                <a class="text-muted"> Пользователь: {{ user.username }}. |</a>
+                <a class="text-muted" href="{% url 'all_tickets' %}">Управлять запросами | </a>
+                <a class="text-muted" href="{% url 'new_ticket' %}">Создать новый запрос | </a>
+                <a class="text-muted" href="{% url 'password_change' %}">Изменить пароль | </a>
+                <a class="text-muted" href="{% url 'logout' %}">Выйти | </a>
+                {% elif user.is_authenticated and user.is_user %}
                 <a class="text-muted"> Пользователь: {{ user.username }}. |</a>
                 <a class="text-muted" href="{% url 'all_tickets' %}">Управлять запросами | </a>
                 <a class="text-muted" href="{% url 'new_ticket' %}">Создать новый запрос | </a>

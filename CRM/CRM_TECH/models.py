@@ -1,9 +1,50 @@
 from datetime import date, timedelta
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-User = get_user_model()
+
+class User(AbstractUser):
+    USER_ROLE = 'user'
+    MODERATOR_ROLE = 'moderator'
+    ADMIN_ROLE = 'admin'
+
+    ROLE_CHOICES = (
+        (USER_ROLE, 'Пользователь'),
+        (MODERATOR_ROLE, 'Модератор'),
+        (ADMIN_ROLE, 'Администратор')
+    )
+    role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES,
+        default=USER_ROLE,
+        verbose_name='Роль'
+    )
+    post = models.TextField(
+        blank=True,
+        verbose_name='Должность'
+    )
+
+
+    class Meta:
+        ordering = ['-username']
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
+    def __str__(self):
+        return self.username
+
+    @property
+    def is_user(self):
+        return self.role == self.USER_ROLE
+
+    @property
+    def is_moderator(self):
+        return self.role == self.MODERATOR_ROLE
+
+    @property
+    def is_admin(self):
+        return self.role == self.ADMIN_ROLE
 
 
 class Ticket(models.Model):
@@ -32,7 +73,8 @@ class Ticket(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name="user",
-        verbose_name="Пользователь"
+        verbose_name="Пользователь",
+        null=True,
     )
     worker = models.ForeignKey(
         User,

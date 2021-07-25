@@ -24,5 +24,15 @@ urlpatterns = [
         'alltickets/',
         views.TiketsListView.as_view(),
         name='all_tickets',
-    )
+    ),
+    path(
+        'user/<str:username>',
+        views.user_edit,
+        name='user_edit',
+    ),
+    path(
+        'allusers/',
+        views.UserListView.as_view(),
+        name='all_users',
+    ),
 ]
