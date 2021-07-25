@@ -40,13 +40,12 @@ def new_ticket(request):
     ticket = form.save(commit=False)
     ticket.author = request.user
     ticket.save()
-
     return redirect("index")
 
 
 @login_required
 def ticket_view(request, username, ticket_id):
-    """Страница тикета с комментариями"""
+    """Страница одного тикета"""
     author = get_object_or_404(User, username=username)
     ticket = get_object_or_404(Ticket, pk=ticket_id, author__username=username)
     return render(
@@ -89,7 +88,11 @@ def ticket_edit(request, username, ticket_id):
 def ticket_edit_staff(request, ticket_id):
     """Редактирование всех полей тикета"""
     ticket = get_object_or_404(Ticket, pk=ticket_id)
-    if not request.user.is_staff or not request.user.is_admin:
+    if not (
+            request.user.is_moderator
+            or request.user.is_admin
+            or request.user.is_superuser
+    ):
         return redirect(index)
     form = TicketFormStaff(
         request.POST or None,
@@ -110,7 +113,11 @@ def ticket_edit_staff(request, ticket_id):
 def user_edit(request, username):
     """Редактирование пользователя"""
     user = get_object_or_404(User, username=username)
-    if request.user.is_admin or request.user.is_superuser or request.user == user:
+    if (
+            request.user.is_admin
+            or request.user.is_superuser
+            or request.user == user
+    ):
         form = UserForm(
             request.POST or None,
             instance=user
@@ -130,12 +137,16 @@ def user_edit(request, username):
 class TiketsListView(SingleTableView, FilterView):
     model = Ticket
     table_class = TicketTable
-    template_name = 'tickets/tickets_table.html'
+    template_name = 'tickets/table.html'
 
     filterset_class = TicketModelFilter
 
     def dispatch(self, request, *args, **kwargs):
-        if not (request.user.is_admin or request.user.is_superuser or request.user.is_moderator):
+        if not (
+                request.user.is_admin
+                or request.user.is_superuser
+                or request.user.is_moderator
+        ):
             return redirect(index)
         return super(TiketsListView, self).dispatch(request, *args, **kwargs)
 
@@ -144,7 +155,7 @@ class TiketsListView(SingleTableView, FilterView):
 class UserListView(SingleTableView):
     model = User
     table_class = UserTable
-    template_name = 'tickets/tickets_table.html'
+    template_name = 'tickets/table.html'
 
     def dispatch(self, request, *args, **kwargs):
         if not (request.user.is_admin or request.user.is_superuser):

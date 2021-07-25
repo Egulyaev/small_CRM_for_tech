@@ -26,7 +26,7 @@ urlpatterns = [
         name='all_tickets',
     ),
     path(
-        'user/<str:username>',
+        'user/<str:username>/',
         views.user_edit,
         name='user_edit',
     ),

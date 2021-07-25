@@ -19,9 +19,8 @@
                 <a class="text-muted" href="{% url 'new_ticket' %}">Создать новый запрос | </a>
                 <a class="text-muted" href="{% url 'password_change' %}">Изменить пароль | </a>
                 <a class="text-muted" href="{% url 'logout' %}">Выйти | </a>
-                {% elif user.is_authenticated and user.is_user %}
+                {% elif user.is_authenticated %}
                 <a class="text-muted"> Пользователь: {{ user.username }}. |</a>
-                <a class="text-muted" href="{% url 'all_tickets' %}">Управлять запросами | </a>
                 <a class="text-muted" href="{% url 'new_ticket' %}">Создать новый запрос | </a>
                 <a class="text-muted" href="{% url 'password_change' %}">Изменить пароль | </a>
                 <a class="text-muted" href="{% url 'logout' %}">Выйти | </a>

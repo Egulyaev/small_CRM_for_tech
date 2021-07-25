@@ -1,12 +1,9 @@
-from django import forms
-from django.contrib.auth import get_user_model
-from django.core.cache.utils import make_template_fragment_key
 from django.test import Client, TestCase
 from django.urls import reverse
+from django import forms
 
-from ..models import Ticket
+from ..models import Ticket, User
 
-User = get_user_model()
 POST_PER_PAGE = 5
 
 
@@ -14,7 +11,7 @@ class PagesTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user = User.objects.create_user(username='GulyaevEO')
+        cls.user = User.objects.create_user(username='GulyaevEO', role='admin')
         cls.ticket = Ticket.objects.create(
             ticket_text='Самый длинный тестовый пост',
             author=cls.user,
@@ -23,21 +20,23 @@ class PagesTests(TestCase):
 
         cls.all_urls = (
             (reverse('index'), 'tickets/index.html'),
-            (reverse('new_ticket'), 'tickets/new.html',),
+            (reverse('new_ticket'), 'tickets/new.html'),
             (reverse('ticket_edit_staff',
                      kwargs={'ticket_id': cls.ticket.pk}),
-             'tickets/edit_ticket_admin.html',),
+             'tickets/edit_ticket_admin.html'),
             (reverse('ticket_view',
                      kwargs={'username': cls.user,
                              'ticket_id': cls.ticket.pk}),
              'tickets/ticket.html'),
             (reverse('ticket_edit',
                      kwargs={'username': cls.user,
-                             'ticket_id': cls.ticket.pk}
-                     ),
+                             'ticket_id': cls.ticket.pk}),
              'tickets/new.html',
              ),
-            (reverse('all_tickets'), 'tickets/tickets_table.html',),
+            (reverse('user_edit',
+                     kwargs={'username': cls.user}),
+             'tickets/new.html'),
+            (reverse('all_users'), 'tickets/table.html',),
         )
 
     def setUp(self):
@@ -112,10 +111,6 @@ class PagesTests(TestCase):
                          PagesTests.user.username)
         self.assertEqual(response.context['ticket'].ticket_text,
                          PagesTests.ticket.ticket_text)
-
-    def test_cache_page(self):
-        key = make_template_fragment_key('index_page')
-        self.assertIsNotNone(key)
 
 
 class PaginationTests(TestCase):
