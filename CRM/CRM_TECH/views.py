@@ -11,7 +11,7 @@ from .tables import TicketTable
 
 MAX_TICKET_PER_PAGE = 5
 
-
+@login_required
 def index(request):
     """Главная страница"""
     ticket_list = Ticket.objects.filter(author=request.user)
@@ -47,7 +47,6 @@ def ticket_view(request, username, ticket_id):
     """Страница тикета с комментариями"""
     author = get_object_or_404(User, username=username)
     ticket = get_object_or_404(Ticket, pk=ticket_id, author__username=username)
-
     return render(
         request,
         'tickets/ticket.html',
@@ -88,7 +87,7 @@ def ticket_edit(request, username, ticket_id):
 def ticket_edit_staff(request, ticket_id):
     """Редактирование всех полей тикета"""
     ticket = get_object_or_404(Ticket, pk=ticket_id)
-    if request.user != ticket.author:
+    if not request.user.is_staff or not request.user.is_admin:
         return redirect(index)
     form = TicketFormStaff(
         request.POST or None,

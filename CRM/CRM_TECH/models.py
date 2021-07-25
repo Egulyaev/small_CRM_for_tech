@@ -45,9 +45,10 @@ class Ticket(models.Model):
 
     ticket_text = models.TextField(verbose_name="Описание заявки")
     created = models.DateTimeField(
-        auto_now=True,
+        auto_now_add=True,
         verbose_name="Дата создания заявки"
     )
+    updated = models.DateTimeField(auto_now=True)
     type = models.CharField(
         max_length=20,
         choices=TYPE_CHOICES,

@@ -5,5 +5,5 @@ from api.serializers import TicketSerializer
 
 
 class TicketViewSet(viewsets.ModelViewSet):
-    queryset = Ticket.objects.all()
+    queryset = Ticket.objects.filter()
     serializer_class = TicketSerializer

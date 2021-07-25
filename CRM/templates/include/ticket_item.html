@@ -1,9 +1,6 @@
 <div class="card mb-3 mt-1 shadow-sm">
-
-    <!-- Отображение текста поста -->
     <div class="card-body">
         <p class="card-text">
-            <!-- Ссылка на автора через @ -->
             <a name="ticket_{{ ticket.id }}" href="">
                 <strong class="d-block text-gray-dark">Автор заявки: @{{ ticket.author }}</strong>
             </a>
@@ -15,19 +12,14 @@
             Содержание заявки: {{ ticket.ticket_text|linebreaksbr }} <br>
         </p>
 
-        <!-- Если пост относится к какому-нибудь сообществу, то отобразим ссылку на него через # -->
         {% if ticket.group %}
         <a class="card-link muted" href="">
             <strong class="d-block text-gray-dark">#{{ ticket.group.title }}</strong>
         </a>
         {% endif %}
 
-        <!-- Отображение ссылки на комментарии -->
         <div class="d-flex justify-content-between align-items-center">
             <div class="btn-group">
-
-
-                <!-- Ссылка на редактирование поста для автора -->
                 {% if user == ticket.author %}
                 <a class="btn btn-sm btn-info" href="{% url 'ticket_edit' ticket.author.username ticket.id %}"
                    role="button">
@@ -35,8 +27,6 @@
                 </a>
                 {% endif %}
             </div>
-
-            <!-- Дата публикации поста -->
             <small class="text-muted">{{ ticket.pub_date }}</small>
         </div>
     </div>

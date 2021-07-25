@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'CRM_TECH',
     'bootstrap3',
     'api',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -34,6 +35,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'CRM.urls'
 
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
+
+LOGIN_URL='/auth/login/'
 
 LOGIN_REDIRECT_URL = 'index'
 
@@ -55,8 +58,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'CRM.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -65,8 +66,6 @@ DATABASES = {
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -83,9 +82,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/2.2/topics/i18n/
-
 LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
@@ -96,7 +92,11 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
