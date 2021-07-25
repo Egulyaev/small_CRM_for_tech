@@ -1,7 +1,10 @@
+from datetime import date, timedelta
+
 from django.contrib.auth import get_user_model
 from django.db import models
 
 User = get_user_model()
+
 
 class Ticket(models.Model):
     OPEN = 'open'
@@ -14,16 +17,16 @@ class Ticket(models.Model):
     CONSULTATION = 'consultation'
 
     STATUS_CHOICES = (
-        (OPEN, 'open'),
-        (IN_WORK, 'in_work'),
-        (PENDING, 'pending'),
-        (DONE, 'done')
+        (OPEN, 'Создан'),
+        (IN_WORK, 'В работе'),
+        (PENDING, 'Приостановлен'),
+        (DONE, 'Выполнено')
     )
 
     TYPE_CHOICES = (
-        (REPAIR, 'repair'),
-        (SERVICE, 'service'),
-        (CONSULTATION, 'consultation')
+        (REPAIR, 'Ремонт'),
+        (SERVICE, 'Обслуживание'),
+        (CONSULTATION, 'Консультация')
     )
     author = models.ForeignKey(
         User,
@@ -40,19 +43,27 @@ class Ticket(models.Model):
         null=True,
     )
 
-    ticket_text = models.TextField()
-    created = models.DateTimeField(auto_now=True)
+    ticket_text = models.TextField(verbose_name="Описание заявки")
+    created = models.DateTimeField(
+        auto_now=True,
+        verbose_name="Дата создания заявки"
+    )
     type = models.CharField(
         max_length=20,
         choices=TYPE_CHOICES,
-        default=OPEN
+        default=OPEN,
+        verbose_name="Тип заявки"
     )
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default=OPEN,
+        verbose_name="Статус",
     )
-    deadline = models.DateTimeField(blank=True, null=True)
+    deadline = models.DateTimeField(
+        default=(date.today() + timedelta(7)),
+        verbose_name="Дедлайн"
+    )
 
     class Meta:
         verbose_name = 'Заявка'

@@ -1,15 +1,20 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
+from django_filters.views import FilterView
+from django_tables2 import SingleTableView
 
-from .forms import TicketForm
+from .filters import TicketModelFilter
+from .forms import TicketFormUser, TicketFormStaff
 from .models import Ticket, User
+from .tables import TicketTable
 
 MAX_TICKET_PER_PAGE = 5
 
+
 def index(request):
     """Главная страница"""
-    ticket_list = Ticket.objects.all()
+    ticket_list = Ticket.objects.filter(author=request.user)
     paginator = Paginator(ticket_list, MAX_TICKET_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -19,10 +24,11 @@ def index(request):
         {'page': page}
     )
 
+
 @login_required
 def new_ticket(request):
     """Страница создания нового тикета"""
-    form = TicketForm(request.POST or None)
+    form = TicketFormUser(request.POST or None)
     if request.method == "GET" or not form.is_valid():
         return render(
             request,
@@ -35,6 +41,7 @@ def new_ticket(request):
 
     return redirect("index")
 
+
 @login_required
 def ticket_view(request, username, ticket_id):
     """Страница тикета с комментариями"""
@@ -46,3 +53,61 @@ def ticket_view(request, username, ticket_id):
         'tickets/ticket.html',
         {'ticket': ticket, 'author': author}
     )
+
+
+@login_required
+def ticket_edit(request, username, ticket_id):
+    """Редактирование тикета"""
+    ticket = get_object_or_404(Ticket, pk=ticket_id, author__username=username)
+    if request.user != ticket.author:
+        return redirect(
+            ticket_view,
+            username=username,
+            ticket_id=ticket.pk,
+        )
+    form = TicketFormUser(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=ticket
+    )
+    if request.method == "GET" or not form.is_valid():
+        return render(
+            request,
+            'tickets/new.html',
+            {'form': form, 'is_edit': True}
+        )
+    ticket.save()
+    return redirect(
+        ticket_view,
+        username=username,
+        ticket_id=ticket.pk,
+    )
+
+
+@login_required
+def ticket_edit_staff(request, ticket_id):
+    """Редактирование всех полей тикета"""
+    ticket = get_object_or_404(Ticket, pk=ticket_id)
+    if request.user != ticket.author:
+        return redirect(index)
+    form = TicketFormStaff(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=ticket
+    )
+    if request.method == "GET" or not form.is_valid():
+        return render(
+            request,
+            'tickets/edit_ticket_admin.html',
+            {'form': form, 'is_edit': True}
+        )
+    ticket.save()
+    return redirect(index)
+
+
+class TiketsListView(SingleTableView, FilterView):
+    model = Ticket
+    table_class = TicketTable
+    template_name = 'tickets/tickets_table.html'
+
+    filterset_class = TicketModelFilter

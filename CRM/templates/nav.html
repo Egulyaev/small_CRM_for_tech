@@ -1,0 +1,17 @@
+<header class="blog-header py-3">
+
+    <a class="p-2 text-muted">
+
+        <nav class="nav d-flex justify-content-between">
+
+            <nav class="my-2 my-md-0 mr-md-3">
+                <left><a class="navbar-brand" href="{% url 'index' %}"><span style="color:red">DOM</span>CRM</a></left>
+                <a class="text-muted"> Пользователь: {{ user.username }}. </a>
+                <a class="text-muted" href="{% url 'new_ticket' %}">Создать новый запрос</a>
+                <a class="text-muted" href="{% url 'password_change' %}">Изменить пароль</a>
+                <a class="text-muted" href="{% url 'logout' %}">Выйти</a>
+                <a class="text-muted" href="{% url 'login' %}">Войти</a> |
+                <a class="text-muted" href="{% url 'signup' %}">Регистрация</a>
+            </nav>
+        </nav>
+    </a>

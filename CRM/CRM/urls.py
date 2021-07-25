@@ -6,4 +6,5 @@ urlpatterns = [
     path("", include("CRM_TECH.urls")),
     path("auth/", include("users.urls")),
     path("auth/", include("django.contrib.auth.urls")),
+    path("", include("api.urls")),
 ]
