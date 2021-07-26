@@ -12,7 +12,7 @@ class TaskCreateFormTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user = User.objects.create_user(username='GulyaevEO')
+        cls.user = User.objects.create_user(username='GulyaevEO', role='user')
         cls.ticket = Ticket.objects.create(
             ticket_text='Самый длинный тестовый пост',
             author=cls.user,
@@ -30,7 +30,7 @@ class TaskCreateFormTests(TestCase):
         """Валидная форма создает ticket."""
         ticket_count = Ticket.objects.count()
         form_data = {
-            'type': 'service',
+            'type': 'Ремонт',
             'ticket_text': 'Самый длинный тестовый пост 2',
         }
 
@@ -53,7 +53,7 @@ class TaskCreateFormTests(TestCase):
         изменяется соответствующая запись в базе данных"""
         ticket_count = Ticket.objects.count()
         form_data = {
-            'type': 'service',
+            'type': 'Ремонт',
             'ticket_text': 'Измененный текст',
         }
 
@@ -73,6 +73,6 @@ class TaskCreateFormTests(TestCase):
         self.assertTrue(
             Ticket.objects.filter(
                 ticket_text='Измененный текст',
-                type='service'
+                type='Ремонт'
             ).exists()
         )
