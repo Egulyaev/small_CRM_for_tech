@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django_filters.views import FilterView
-from django_tables2 import SingleTableView
+from django_tables2 import SingleTableView, SingleTableMixin
 
 from .filters import TicketModelFilter
 from .forms import TicketFormUser, TicketFormStaff, UserForm
@@ -134,11 +134,10 @@ def user_edit(request, username):
 
 
 @method_decorator(login_required, name='dispatch')
-class TiketsListView(SingleTableView, FilterView):
+class TiketsListView(SingleTableMixin, FilterView):
     model = Ticket
     table_class = TicketTable
     template_name = 'tickets/table.html'
-
     filterset_class = TicketModelFilter
 
     def dispatch(self, request, *args, **kwargs):

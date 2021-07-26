@@ -12,6 +12,7 @@ ALLOWED_HOSTS = []
 AUTH_USER_MODEL = 'CRM_TECH.User'
 
 INSTALLED_APPS = [
+    'django_filters',
     'django_tables2',
     'django.contrib.admin',
     'django.contrib.auth',

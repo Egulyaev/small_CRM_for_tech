@@ -48,20 +48,20 @@ class User(AbstractUser):
 
 
 class Ticket(models.Model):
-    OPEN = 'open'
-    IN_WORK = 'in_work'
-    PENDING = 'pending'
-    DONE = 'done'
+    OPEN = 'Открыто'
+    IN_WORK = 'В работе'
+    PENDING = 'Ожидание'
+    DONE = 'Закрыто'
 
-    REPAIR = 'repair'
-    SERVICE = 'service'
-    CONSULTATION = 'consultation'
+    REPAIR = 'Ремонт'
+    SERVICE = 'Обслуживание'
+    CONSULTATION = 'Консультация'
 
     STATUS_CHOICES = (
-        (OPEN, 'Создан'),
+        (OPEN, 'Открыто'),
         (IN_WORK, 'В работе'),
-        (PENDING, 'Приостановлен'),
-        (DONE, 'Выполнено')
+        (PENDING, 'Ожидание'),
+        (DONE, 'Закрыто')
     )
 
     TYPE_CHOICES = (

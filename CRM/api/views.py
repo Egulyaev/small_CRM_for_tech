@@ -13,7 +13,6 @@ class ListViewSet(
 
 
 class TicketViewSet(ListViewSet):
-    queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
 
     def list(self, request):
